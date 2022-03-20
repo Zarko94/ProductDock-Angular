@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { AuthService } from '../_services/auth.service';
+import { TokenStorageService } from '../_services/token-storage.service';
+
 import { Router } from '@angular/router';
-import { RegistrationService } from '../registration.service';
-import { User } from '../user';
+// import { RegistrationService } from '../registration.service';
+// import { User } from '../user';
+// import { NgForm, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -10,22 +13,45 @@ import { User } from '../user';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  user = new User();
-  msg = '';
+  // formGroup!: FormGroup;
+  form: any = {
+    username: null,
+    password: null,
+  };
+  isLoggedIn = false;
+  isLoginFailed = false;
+  errorMessage = '';
+  roles: string[] = [];
 
-  constructor(private _service: RegistrationService, private _router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private tokenStorage: TokenStorageService,
+    private _router: Router
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.tokenStorage.getToken()) {
+      this.isLoggedIn = true;
+      this.roles = this.tokenStorage.getUser().roles;
+    }
+  }
 
-  loginUser() {
-    this._service.loginUserFromRemote(this.user).subscribe(
+  onSubmit(): void {
+    const { username, password } = this.form;
+
+    this.authService.login(username, password).subscribe(
       (data) => {
-        console.log(this.user);
+        this.tokenStorage.saveToken(data.accessToken);
+        this.tokenStorage.saveUser(data);
+
+        this.isLoginFailed = false;
+        this.isLoggedIn = true;
+        this.roles = this.tokenStorage.getUser().roles;
         this._router.navigate(['/loginsuccess']);
       },
-      (error) => {
-        console.log(error);
-        this.msg = 'Bad credentials, please enter valid emailid and password';
+      (err) => {
+        this.errorMessage = err.error.message;
+        this.isLoginFailed = true;
       }
     );
   }

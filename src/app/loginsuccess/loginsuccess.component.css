@@ -1,0 +1,7 @@
+h1 {
+  color: rgb(47, 47, 218);
+  font-weight: 500;
+}
+mat-toolbar-row {
+  justify-content: space-between;
+}
