@@ -3,9 +3,6 @@ import { AuthService } from '../_services/auth.service';
 import { TokenStorageService } from '../_services/token-storage.service';
 
 import { Router } from '@angular/router';
-// import { RegistrationService } from '../registration.service';
-// import { User } from '../user';
-// import { NgForm, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',

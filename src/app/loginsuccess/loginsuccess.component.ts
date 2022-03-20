@@ -2,7 +2,7 @@ import { Token } from '@angular/compiler/src/ml_parser/tokens';
 import { Component, OnInit } from '@angular/core';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { Router } from '@angular/router';
-
+import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'app-loginsuccess',
@@ -18,7 +18,6 @@ export class LoginsuccessComponent implements OnInit {
   ngOnInit(): void {}
 
   logout() {
-   
     this.tokenStorage.signOut;
     this._router.navigate(['']);
   }
